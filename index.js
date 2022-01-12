@@ -7,7 +7,7 @@ const port = process.env.PORT || 5000;
 
 app.use(express.json());
 app.use(cors(
-	{origin: 'https://61ded14c46ed8d0008ea47c7--brave-franklin-98361a.netlify.app'}
+	{origin: '*'}
 ));
 app.listen(port, () => {
 	console.log("Server started on port", port);

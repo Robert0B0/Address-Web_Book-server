@@ -13,10 +13,10 @@ app.listen(port, () => {
 
 //Create connection
 const db = mysql.createConnection({
-	host: "localhost",
-	user: "root",
-	password: "MyPa$$4Dew",
-	database: "my_addresses",
+	host: "eu-cdbr-west-02.cleardb.net",
+	user: "b0ca1ad9ee319f",
+	password: "2a21be57",
+	database: "heroku_10bf9d7c5ff0dcf",
 });
 
 // Connect

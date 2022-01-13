@@ -12,7 +12,8 @@ app.listen(port, () => {
 });
 
 //Create connection
-const db = mysql.createConnection({
+const db = mysql.createPool({
+	connectionLimit: 5,
 	host: "localhost",
 	user: "root",
 	password: "MyPa$$4Dew",

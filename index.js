@@ -14,7 +14,7 @@ app.listen(app.get('port'), () => {
 });
 
 //Create connection
-const db = mysql.createPool({
+const db = mysql.createConnection({
 	host: "eu-cdbr-west-02.cleardb.net",
 	user: "b0ca1ad9ee319f",
 	password: "2a21be57",

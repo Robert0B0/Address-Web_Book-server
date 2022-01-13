@@ -1,101 +1,75 @@
 const express = require("express");
-const mysql = require("mysql");
+const pool = require("./db");
 const cors = require("cors");
 
 const app = express();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 8080;
 
 app.use(express.json());
 app.use(cors());
-app.listen(port, () => {
-	console.log("Server started on port", port);
-});
 
-//Create connection
-const db = mysql.createPool({
-	connectionLimit: 5,
-	host: "localhost",
-	user: "root",
-	password: "MyPa$$4Dew",
-	database: "my_addresses",
-});
-
-// Connect
-db.on("connection", function (connection) {
-	console.log("DB Connection established");
-
-	connection.on("error", function (err) {
-		console.error(new Date(), "MySQL error", err.code);
-	});
-	connection.on("close", function (err) {
-		console.error(new Date(), "MySQL close", err);
-	});
-});
-
+//ROUTES
 //GET
-app.get("/contacts", (req, res) => {
-	db.query("SELECT * FROM my_contacts", (err, result) => {
-		if (err) {
-			throw err;
-		} else {
-			res.send(result);
-		}
-	});
+app.get("/contacts", async (req, res) => {
+	try {
+		const allContcats = await pool.query("SELECT * FROM contacts");
+		res.json(allContcats.rows);
+	} catch (err) {
+		console.log(err.message);
+	}
 });
 
 //POST
-app.post("/create", (req, res) => {
+app.post("/create", async (req, res) => {
 	const name = req.body.name;
 	const address = req.body.address;
 	const picture = req.body.picture;
 
-	db.query(
-		"INSERT INTO my_contacts (name, address, picture) VALUES (?,?,?);",
-		[name, address, picture],
-		(err, result) => {
-			if (err) {
-				throw err;
-			} else {
-				res.send("Values Inserted");
-			}
-		}
-	);
+	try {
+		const newContact = await pool.query(
+			"INSERT INTO contacts (name, address, picture) VALUES ($1,$2,$3);",
+			[name, address, picture]
+		);
+		res.json(newContact.rows[0]);
+	} catch (err) {
+		console.log(err.message);
+	}
 });
 
 //UPDATE
-app.put("/contact/:id", (req, res) => {
+app.put("/contact/:id", async (req, res) => {
 	const name = req.body.name;
 	const address = req.body.address;
 	const picture = req.body.picture;
-	const contact_id = parseInt(req.params.id);
+	const { id } = req.params;
 
-	db.query(
-		"UPDATE my_contacts SET name = ?, address = ?, picture = ? WHERE id = ?;",
-		[name, address, picture, contact_id],
-		(err, result) => {
-			if (err) {
-				throw err;
-			} else {
-				res.send("Values Inserted");
-			}
-		}
-	);
+	try {
+		const updateContact = await pool.query(
+			"UPDATE contacts SET = name = $1, address = $2, picture = $3 WHERE id = $4;",
+			[name, address, picture, contact_id]
+		);
+
+		res.json("contact Updates");
+	} catch (err) {
+		console.log(err.message);
+	}
 });
 
 //DELETE
-app.delete("/delete/:id", (req, res) => {
-	const contact_id = parseInt(req.params.id);
+app.delete("/delete/:id", async (req, res) => {
+	const { id } = req.params;
 
-	db.query(
-		"DELETE FROM my_contacts WHERE id = ?;",
-		[contact_id],
-		(err, result) => {
-			if (err) {
-				console.log(err);
-				throw err;
-			} else {
-				res.send("Values Deleted");
-			}
-		}
-	);
+	try {
+		const deleteObj = await pool.query("DELETE FROM contacts WHERE id = $1", [
+			id,
+		]);
+		res.json("Contact deleted");
+	} catch (err) {
+		console.log(err.message);
+	}
+});
+
+//Run Server
+app.listen(port, () => {
+	console.log("Server started on port", port);
 });

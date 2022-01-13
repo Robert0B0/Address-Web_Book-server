@@ -3,22 +3,20 @@ const mysql = require("mysql");
 const cors = require("cors");
 
 const app = express();
-app.set('port', (process.env.PORT || 5000));
+const port = process.env.PORT || 5000;
 
 app.use(express.json());
-app.use(cors(
-	{origin: '*'}
-));
-app.listen(app.get('port'), () => {
-	console.log("Server started");
+app.use(cors());
+app.listen(port, () => {
+	console.log("Server started on port", port);
 });
 
 //Create connection
 const db = mysql.createConnection({
-	host: "eu-cdbr-west-02.cleardb.net",
-	user: "b0ca1ad9ee319f",
-	password: "2a21be57",
-	database: "heroku_10bf9d7c5ff0dcf",
+	host: "localhost",
+	user: "root",
+	password: "MyPa$$4Dew",
+	database: "my_addresses",
 });
 
 // Connect

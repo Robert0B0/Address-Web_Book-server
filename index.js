@@ -21,13 +21,15 @@ const db = mysql.createPool({
 });
 
 // Connect
-db.connect((err) => {
-	if (err) {
-		console.log(err);
-		throw err;
-	} else {
-		console.log("DB Connected...");
-	}
+db.on("connection", function (connection) {
+	console.log("DB Connection established");
+
+	connection.on("error", function (err) {
+		console.error(new Date(), "MySQL error", err.code);
+	});
+	connection.on("close", function (err) {
+		console.error(new Date(), "MySQL close", err);
+	});
 });
 
 //GET

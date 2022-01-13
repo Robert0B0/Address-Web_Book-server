@@ -3,13 +3,13 @@ const mysql = require("mysql");
 const cors = require("cors");
 
 const app = express();
-const port = process.env.PORT || 5000;
+app.set('port', (process.env.PORT || 5000));
 
 app.use(express.json());
 app.use(cors(
 	{origin: '*'}
 ));
-app.listen(port, () => {
+app.listen(app.get('port'), () => {
 	console.log("Server started on port", port);
 });
 

@@ -10,7 +10,7 @@ app.use(cors(
 	{origin: '*'}
 ));
 app.listen(app.get('port'), () => {
-	console.log("Server started on port", port);
+	console.log("Server started");
 });
 
 //Create connection

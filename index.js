@@ -45,7 +45,7 @@ app.put("/contact/:id", async (req, res) => {
 
 	try {
 		const updateContact = await pool.query(
-			"UPDATE contacts SET = name = $1, address = $2, picture = $3 WHERE id = $4;",
+			"UPDATE contacts SET name = $1, address = $2, picture = $3 WHERE id = $4;",
 			[name, address, picture, id]
 		);
 
